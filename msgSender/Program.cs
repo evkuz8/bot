@@ -34,7 +34,7 @@ namespace msgSender
             apiAuthParams.Login = login;
             apiAuthParams.Password = password;
             apiAuthParams.Settings = settings;
-            apiAuthParams.AccessToken = "123"; 
+            apiAuthParams.AccessToken = 
 
             try
             {
