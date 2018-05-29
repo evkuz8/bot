@@ -46,7 +46,7 @@ namespace developingChatBot
                 }
                 else
                 {
-                    GetStr("ChatBot говорит:\n"+ answer + "\nВаш Вопрос: ");
+                    GetStr(answer); //возвращаем ответ
                 }
 
             }
@@ -63,7 +63,7 @@ namespace developingChatBot
                     Teach();
                     GetStr("Запомнил!");
                 }
-                ChatBot_GetStr("");
+                GetStr += ChatBot_GetStr;
 
             }
         }
@@ -85,7 +85,6 @@ namespace developingChatBot
             }
             catch (Exception)
             {
-                File.Create(badWordsPath);
             }
             //string allbadwords = "";
             //foreach (string item in loadingBadWords)
