@@ -3,6 +3,7 @@ using VkNet;
 using VkNet.Enums.Filters;
 using VkNet.Exception;
 using VkNet.Model.RequestParams;
+using System.IO;
 
 namespace msgSender
 {
@@ -14,47 +15,34 @@ namespace msgSender
             Auth();
             while (true)
             {
-                Console.ReadLine();
                 MessagesSendParams messagesSendParams = new MessagesSendParams();
                 messagesSendParams.UserId = 135311173;
-                messagesSendParams.Message = Console.ReadLine();
+                Console.Write("Бот говорит: ");
+                string msg = Console.ReadLine();
+                messagesSendParams.Message = msg;
                 vkApi.Messages.Send(messagesSendParams);
+
+                Console.ReadLine();
+
+
+                MessagesGetHistoryParams messagesGetHistoryParams = new MessagesGetHistoryParams();
+                messagesGetHistoryParams.UserId = 135311173;
+                messagesGetHistoryParams.Count = 1;
+                Console.WriteLine("user: ");
+
+                vkApi.Messages.GetHistory(messagesGetHistoryParams);
             }
         }
 
         static void Auth()
         {
-            ulong appID = 6493465;
-            string login = @"evgn.worker@gmail.com";
-            string password = "3W0k8E4r";
-            Settings settings = Settings.All;
-
             ApiAuthParams apiAuthParams = new ApiAuthParams();
-            apiAuthParams.ApplicationId = appID;
-            apiAuthParams.Login = login;
-            apiAuthParams.Password = password;
-            apiAuthParams.Settings = settings;
-            apiAuthParams.AccessToken = 
+            apiAuthParams.ApplicationId = 6493465; 
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "tss.txt";
+            apiAuthParams.AccessToken = (File.ReadAllLines(path)).ToString();
 
-            try
-            {
-                vkApi.Authorize(apiAuthParams);
-
-            }
-            catch (CaptchaNeededException cEx)
-            {
-                Uri captchUri = cEx.Img.;
-                //MediaPlayer
-                Console.WriteLine();
-                Console.WriteLine(new string('-',50));
-                Console.WriteLine();
-                Console.WriteLine(cEx);
-                //System.Diagnostics.Process.Start(captchUri);
-                string captchKey = Console.ReadLine();
-                apiAuthParams.CaptchaKey = captchKey;
-                apiAuthParams.CaptchaSid = cEx.Sid;
-                vkApi.Authorize(apiAuthParams);
-            }
+            vkApi.Authorize(apiAuthParams);
+           
         }
         
     }
