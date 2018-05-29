@@ -73,7 +73,7 @@ namespace msgSender
                 }).Messages[0];
                 if (message.OwnerId!= myID && message.ReadState != VkNet.Enums.MessageReadState.Readed)
                 {
-                    if (isFirst)
+                    /*if (isFirst)
                     {
                         lastMessage = vkApi.Messages.Get(new MessagesGetParams
                         {
@@ -93,7 +93,9 @@ namespace msgSender
                             break;
                         }
                         isFirst = true;
-                    }
+                    }*/
+                    currentMessage = message;
+                    break;
                 }
                 
                 Thread.Sleep(350);
