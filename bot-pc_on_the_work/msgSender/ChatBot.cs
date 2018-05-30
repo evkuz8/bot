@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-namespace developingChatBot
+namespace msgSender
 {
     class ChatBot
     {
@@ -46,7 +46,7 @@ namespace developingChatBot
                 }
                 else
                 {
-                    GetStr("ChatBot говорит:\n"+ answer + "\nВаш Вопрос: ");
+                    GetStr(answer); //возвращаем ответ
                 }
 
             }
@@ -63,7 +63,7 @@ namespace developingChatBot
                     Teach();
                     GetStr("Запомнил!");
                 }
-                GetStr("Пользователь говорит: ");
+                GetStr += ChatBot_GetStr;
 
             }
         }
@@ -77,7 +77,15 @@ namespace developingChatBot
 
         bool AntiMat (string inputString)
         {
-            string [] loadingBadWords = File.ReadAllLines(badWordsPath);
+            string[] loadingBadWords = { };
+            try
+            {
+                loadingBadWords = File.ReadAllLines(badWordsPath);
+
+            }
+            catch (Exception)
+            {
+            }
             //string allbadwords = "";
             //foreach (string item in loadingBadWords)
             //{
