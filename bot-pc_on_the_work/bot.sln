@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "developingChatBot", "develo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "msgSender", "msgSender\msgSender.csproj", "{0E00691E-A037-47BF-9A02-2226C0829335}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddBadWordBot", "AddBadWordBot\AddBadWordBot.csproj", "{E96E4E5E-9AE9-4647-830E-A3018258BEB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddBadWordBot", "AddBadWordBot\AddBadWordBot.csproj", "{E96E4E5E-9AE9-4647-830E-A3018258BEB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wordDBreformer", "ConsoleApp1\wordDBreformer.csproj", "{FAF7806E-F41E-4428-8BAA-5899C0DF2098}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{E96E4E5E-9AE9-4647-830E-A3018258BEB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E96E4E5E-9AE9-4647-830E-A3018258BEB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E96E4E5E-9AE9-4647-830E-A3018258BEB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAF7806E-F41E-4428-8BAA-5899C0DF2098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAF7806E-F41E-4428-8BAA-5899C0DF2098}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAF7806E-F41E-4428-8BAA-5899C0DF2098}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAF7806E-F41E-4428-8BAA-5899C0DF2098}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

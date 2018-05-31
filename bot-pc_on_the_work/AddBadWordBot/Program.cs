@@ -17,9 +17,7 @@ namespace AddBadWordBot
 
         static void Main(string[] args)
         {
-            ChatBot chatBot = new ChatBot
-                (
-                Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"/badwords.txt");
+            ChatBot chatBot = new ChatBot();
             chatBot.GetStr += ChatBot_GetStr;
 
             Auth();
@@ -27,7 +25,8 @@ namespace AddBadWordBot
 
             while (true)
             {
-                chatBot.GenAnswer(GetMessage());
+                 chatBot.GenAnswer(GetMessage());
+                
                 //ConsoleCtrlCheck(CtrlTypes.CTRL_CLOSE_EVENT);
             }
         }
@@ -58,7 +57,7 @@ namespace AddBadWordBot
 
         static string GetMessage()
         {
-            Message currentMessage = null;
+            string currentMessageText = string.Empty;
             long myID = 489971207;
 
             while (true)
@@ -68,17 +67,43 @@ namespace AddBadWordBot
                     Count = 1
                 }).Messages[0];
                 userID = message.UserId.Value;
+                
                 if (userID != myID && message.ReadState != VkNet.Enums.MessageReadState.Readed)
                 {
-                    currentMessage = message;
-                    break;
+                    
+                    if (message.ForwardedMessages.Count > 0) //проверка на пересылаемые сообщения
+                    {
+                        if (message.ForwardedMessages.Count == 1)
+                        {
+                            currentMessageText = message.ForwardedMessages[0].Body;
+                            break;
+                        }
+                        else
+                        {
+                            SendMessage("Пожалуйста, пересылай мне не больше 1 сообщения!");
+                        }
+                    }
+                    else
+                    {
+                        if (message.Attachments.Count > 0 && message.Body.Length == 0) //проврека на вложения без текста
+                        {
+                            SendMessage("Пожалуйста, отправляй мне только текст!");
+                        }
+                        else
+                        {
+                            currentMessageText = message.Body; //верни текст сообщения
+                            break;
+                        }
+                    }
+                    
+                    
                 }
 
 
                 Thread.Sleep(350);
             }
 
-            return currentMessage.Body;
+            return currentMessageText;
         }
 
         //public static extern bool SetConsoleCtrlHandler(HandlerRoutine Handler, bool Add);

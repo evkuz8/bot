@@ -3,32 +3,28 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace AddBadWordBot
 {
     class ChatBot
     {
-        SqlConnection sqlConnection = new SqlConnection();
-        List<string> data = new List<string>();
-        string dataPath;
+        static string conStr = @"Data Source = .\SQLEXPRESS; Initial Catalog = Dictionaries; Integrated Security = true;";
+        static SqlConnection sqlConnection  = new SqlConnection(conStr);
+
         static string question;
 
         public event Action<string> GetStr; // событие
 
-        public ChatBot(string dpath)
+        public ChatBot()
         {
-            dataPath = dpath;
             try
             {
-                data.AddRange(File.ReadAllLines(dpath));
+                sqlConnection.Open();
             }
-            catch (Exception)
-            {
-
-            }
+            catch (Exception) { }
 
             GetStr += ChatBot_GetStr;
-            //GetStr("\nПользователь говорит: ");
             
         }
 
@@ -52,8 +48,8 @@ namespace AddBadWordBot
 
         void Teach()
         {
-            data.Add(question); // add a question 
-            File.WriteAllLines(dataPath, data.ToArray()); // saving
+            SqlCommand command = new SqlCommand("INSERT INTO BadWords (BadWord) VALUES ('" + question + "')", sqlConnection);
+            command.ExecuteNonQuery();
         }
 
        
@@ -62,18 +58,24 @@ namespace AddBadWordBot
         {
             string answer = string.Empty,
 
-            symbols = "`~!@#$%^&*(){}[]_-+=|\\|/?.,<>'\"№";
+            symbols = "`~!@#$%^&*(){}[]_-+=|\\|/?.,<>'\"№0 ";
+            question=Exclude(q.ToLower(),symbols.ToCharArray()); //унификация сиволов ответа
 
-            question=Exclude(q.ToLower(),symbols.ToCharArray());
-
-            for (int i = 0; i < data.Count; i++)
+            SqlCommand command = new SqlCommand("SELECT BadWord FROM BadWords WHERE BadWord = '" + question + "';",sqlConnection);
+            SqlDataReader reader = command.ExecuteReader();
+            
+            while (reader.Read())
             {
-                if (data[i] == question)
+            //}
+            //if (reader[0].ToString().Length != 0)
+            //{
+                if (reader[0].ToString() == question)
                 {
-                    answer = data[i];
-                    break;
+                    Console.WriteLine(reader[0].ToString());
+                    answer = reader[0].ToString();
                 }
             }
+            reader.Close();
            
             return answer; // при проверке стоит поставить точку останова
         }
