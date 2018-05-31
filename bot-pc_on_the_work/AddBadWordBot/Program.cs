@@ -6,6 +6,7 @@ using VkNet.Model.RequestParams;
 using System.IO;
 using VkNet.Model;
 using System.Threading;
+using System.Diagnostics;
 
 namespace AddBadWordBot
 {
@@ -97,6 +98,11 @@ namespace AddBadWordBot
                     }
                     
                     
+                }
+                else if(userID == myID & message.Body == "sl33p") //прототип самовыключения
+                {
+                    vkApi.Status.Set("Я сплю, не тревожить!");
+                    Process.GetCurrentProcess().Kill();
                 }
 
 
