@@ -75,7 +75,7 @@ namespace AddBadWordBot
             while (true)
             {
 
-                List<Message> messages = new List<Message>();
+                List<Message> messages = new List<Message>(); //получаем список непрочитанных сообщений
 
                 foreach (var msg in vkApi.Messages.Get(new MessagesGetParams { Count = 50  }).Messages)
                 {
@@ -85,12 +85,15 @@ namespace AddBadWordBot
                     }
                 }
                
+
                 Console.Clear();
                 Message message;
 
+
+
                 if (messages.Count >= 1)
                 {
-                    currentMessageText = LoadMessage(message = messages[messages.Count - 1]); // самое старое
+                    currentMessageText = LoadMessage(message = messages[messages.Count - 1]); // выбираем из них самое старое
                     userID = message.UserId.Value;
                     break;
                 }
@@ -129,17 +132,25 @@ namespace AddBadWordBot
             return currentMessageText;
         }
 
-        //static string GenerateAnswer()
-        //{
-        //    string currentMessageText = string.Empty;
+        static void GeneratingAnswers(ChatBot chatBot)
+        {
+            string currentMessageText = string.Empty;
 
-        //    var dialogs = vkApi.Messages.GetDialogs(new MessagesDialogsGetParams { Count = })
+            while (true)
+            {
+                var dialogs = vkApi.Messages.GetDialogs(new MessagesDialogsGetParams { Count = 1,/* Unread = true, */Unanswered = true });
 
+                Message message;
+                if (dialogs.Messages.Count > 0)
+                {
+                    foreach (var msg in dialogs.Messages)
+                    {
+                        chatBot.GenAnswer(msg.Body);
+                    }   
+                }
+            }
 
-
-
-        //    return currentMessageText;
-        //}
+        }
 
 
 
