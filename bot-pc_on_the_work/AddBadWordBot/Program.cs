@@ -7,13 +7,18 @@ using System.IO;
 using VkNet.Model;
 using System.Threading;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace AddBadWordBot
 {
     class Program
     {
         static VkApi vkApi = new VkApi(); 
-        static long userID = 0;   
+        static long userID = 0;
+        static long myID;
+         
+        
+
 
 
         static void Main(string[] args)
@@ -23,6 +28,11 @@ namespace AddBadWordBot
 
             Auth();
             vkApi.Status.Set("Mode \"матершинник\" is ON");
+
+            myID = vkApi.UserId.Value;
+            Console.WriteLine(new string('-',100));
+            Console.WriteLine(vkApi.Account.GetInfo());
+            Console.WriteLine(new string('-', 100));
 
             while (true)
             {
@@ -35,6 +45,7 @@ namespace AddBadWordBot
         {
             SendMessage(obj);
         }
+
 
         static void Auth()
         {
@@ -63,54 +74,75 @@ namespace AddBadWordBot
 
             while (true)
             {
-                Message message = vkApi.Messages.Get(new MessagesGetParams
+
+                List<Message> messages = new List<Message>();
+
+                foreach (var msg in vkApi.Messages.Get(new MessagesGetParams { Count = 50  }).Messages)
                 {
-                    Count = 1
-                }).Messages[0];
-                userID = message.UserId.Value;
+                    if (msg.ReadState == VkNet.Enums.MessageReadState.Unreaded /* && msg.OwnerId != myID*/)
+                    {
+                        messages.Add(msg);
+                    }
+                }
+               
+                Console.Clear();
+                Message message;
+
+                if (messages.Count >= 1)
+                {
+                    currentMessageText = LoadMessage(message = messages[messages.Count - 1]); // самое старое
+                    userID = message.UserId.Value;
+                    break;
+                }
                 
-                if (userID != myID && message.ReadState != VkNet.Enums.MessageReadState.Readed)
-                {
-                    
-                    if (message.ForwardedMessages.Count > 0) //проверка на пересылаемые сообщения
-                    {
-                        if (message.ForwardedMessages.Count == 1)
-                        {
-                            currentMessageText = message.ForwardedMessages[0].Body;
-                            break;
-                        }
-                        else
-                        {
-                            SendMessage("Пожалуйста, пересылай мне не больше 1 сообщения!");
-                        }
-                    }
-                    else
-                    {
-                        if (message.Attachments.Count > 0 && message.Body.Length == 0) //проврека на вложения без текста
-                        {
-                            SendMessage("Пожалуйста, отправляй мне только текст!");
-                        }
-                        else
-                        {
-                            currentMessageText = message.Body; //верни текст сообщения
-                            break;
-                        }
-                    }
-                    
-                    
-                }
-                else if(userID == myID & message.Body == "sl33p") //прототип самовыключения
-                {
-                    vkApi.Status.Set("Я сплю, не тревожить!");
-                    Process.GetCurrentProcess().Kill();
-                }
-
-
                 Thread.Sleep(350);
             }
 
             return currentMessageText;
         }
+
+        static string  LoadMessage(Message message)
+        {
+            string currentMessageText = string.Empty;
+            if (message.ForwardedMessages.Count > 0) //проверка на пересылаемые сообщения
+            {
+                if (message.ForwardedMessages.Count == 1)
+                {
+                    currentMessageText = message.ForwardedMessages[0].Body;
+                }
+                else
+                {
+                    SendMessage("Пожалуйста, пересылай мне не больше 1 сообщения!");
+                }
+            }
+            else
+            {
+                if (message.Attachments.Count > 0 && message.Body.Length == 0) //проврека на вложения без текста
+                {
+                    SendMessage("Пожалуйста, отправляй мне только текст!");
+                }
+                else
+                {
+                    currentMessageText = message.Body; //верни текст сообщения
+                }
+            }
+            return currentMessageText;
+        }
+
+        //static string GenerateAnswer()
+        //{
+        //    string currentMessageText = string.Empty;
+
+        //    var dialogs = vkApi.Messages.GetDialogs(new MessagesDialogsGetParams { Count = })
+
+
+
+
+        //    return currentMessageText;
+        //}
+
+
+
 
         //public static extern bool SetConsoleCtrlHandler(HandlerRoutine Handler, bool Add);
 
